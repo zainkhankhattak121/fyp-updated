@@ -1,0 +1,81 @@
+{
+  "expo": {
+    "name": "Deepfake",
+    "slug": "Deepfake",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "deepfakeapp",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.deepfakeapp.deepfake",
+      "googleServicesFile": "./ios/GoogleService-Info.plist"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "googleServicesFile": "./android/app/google-services.json",
+      "package": "com.deepfakeapp.deepfake",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "deepfakeapp.com",
+              "pathPrefix": "/"
+            },
+            {
+              "scheme": "deepfakeapp"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "firebase": {
+        "apiKey": "AIzaSyC5zFuWZGZcsIbFTqSzyVgBVHjnUZmKdSE",
+        "authDomain": "deepfakeaudio.firebaseapp.com",
+        "projectId": "deepfakeaudio",
+        "storageBucket": "deepfakeaudio.appspot.com",
+        "messagingSenderId": "996257752349",
+        "appId": "1:996257752349:android:41c3c0dda62c933fef6df4"
+      },
+      "eas": {
+        "projectId": "7b4fe032-8710-471b-8e0d-c9ad96c85ca3"
+      },
+      "googleSignIn": {
+        "webClientId": "715536465897-te7vjtf8eoato7p3pcsvu34ied6o2cnq.apps.googleusercontent.com",
+        "apiKey": "AIzaSyC5zFuWZGZcsIbFTqSzyVgBVHjnUZmKdSE",
+        "certificateHash": "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"
+      }
+    },
+    "dependencies": {
+      "firebase-analytics": "33.4.0",
+      "firebase-auth": "33.4.0",
+      "firebase-firestore": "33.4.0",
+      "firebase-storage": "33.4.0",
+      "expo-google-sign-in": "^10.0.1"
+    },
+    "owner": "zainkhankhattak",
+    "plugins": [
+      "expo-secure-store",
+      "expo-font"
+    ]
+  }
+}

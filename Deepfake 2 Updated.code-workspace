@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "Deepfake 2 Updated",
+			"path": "."
+		},
+		{
+			"name": "Wav2vec2 fold 2",
+			"path": "../Wav2vec2 fold 2"
+		}
+	],
+	"settings": {}
+}

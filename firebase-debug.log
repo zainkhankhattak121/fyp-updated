@@ -1,0 +1,184 @@
+[debug] [2024-10-25T04:06:07.220Z] ----------------------------------------------------------------------
+[debug] [2024-10-25T04:06:07.226Z] Command:       /usr/local/bin/node /usr/local/bin/firebase emulators:start
+[debug] [2024-10-25T04:06:07.226Z] CLI Version:   13.22.1
+[debug] [2024-10-25T04:06:07.227Z] Platform:      darwin
+[debug] [2024-10-25T04:06:07.227Z] Node Version:  v20.11.1
+[debug] [2024-10-25T04:06:07.227Z] Time:          Fri Oct 25 2024 09:06:07 GMT+0500 (Pakistan Standard Time)
+[debug] [2024-10-25T04:06:07.227Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-10-25T04:06:07.453Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-25T04:06:07.454Z] > authorizing via signed-in user (zainkhankhattak3@gmail.com)
+[debug] [2024-10-25T04:06:07.925Z] java version "21.0.2" 2024-01-16 LTS
+
+[debug] [2024-10-25T04:06:07.926Z] Java(TM) SE Runtime Environment (build 21.0.2+13-LTS-58)
+Java HotSpot(TM) 64-Bit Server VM (build 21.0.2+13-LTS-58, mixed mode, sharing)
+
+[debug] [2024-10-25T04:06:07.955Z] Parsed Java major version: 21
+[info] i  emulators: Starting emulators: firestore, hosting {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: firestore, hosting"}}
+[debug] [2024-10-25T04:06:11.414Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:06:11.415Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:06:11.415Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[warn] ⚠  hosting: Hosting Emulator unable to start on port 5000, starting on 5002 instead. {"metadata":{"emulator":{"name":"hosting"},"message":"Hosting Emulator unable to start on port 5000, starting on 5002 instead."}}
+[debug] [2024-10-25T04:06:11.416Z] [hosting] Hosting Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:06:11.416Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5002}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2024-10-25T04:06:11.426Z] [hub] writing locator at /var/folders/5n/6gy7qv3x4235255ly00xljp80000gn/T/hub-deepfake-437908.json
+[info] i  firestore: downloading cloud-firestore-emulator-v1.19.8.jar... {"metadata":{"emulator":{"name":"firestore"},"message":"downloading cloud-firestore-emulator-v1.19.8.jar..."}}
+[debug] [2024-10-25T04:06:11.460Z] >>> [apiv2][query] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar 
+[debug] [2024-10-25T04:06:12.170Z] <<< [apiv2][status] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar 200
+[debug] [2024-10-25T04:06:12.170Z] <<< [apiv2][body] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar [stream]
+[debug] [2024-10-25T04:06:38.706Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  firestore: Stopping Firestore Emulator {"metadata":{"emulator":{"name":"firestore"},"message":"Stopping Firestore Emulator"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2024-10-25T04:06:38.718Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[debug] [2024-10-25T04:06:39.218Z] Error: ENOSPC: no space left on device, copyfile '/var/folders/5n/6gy7qv3x4235255ly00xljp80000gn/T/tmp-58286-CpmyK1tDL0iT' -> '/Users/zainkhan/.cache/firebase/emulators/cloud-firestore-emulator-v1.19.8.jar'
+    at Object.copyFileSync (node:fs:3029:11)
+    at copyFile (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:73:6)
+    at onFile (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:59:25)
+    at getStats (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:51:44)
+    at handleFilterAndCopy (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:36:10)
+    at Object.copySync (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:29:10)
+    at downloadEmulator (/usr/local/lib/node_modules/firebase-tools/lib/emulator/download.js:30:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.start (/usr/local/lib/node_modules/firebase-tools/lib/emulator/downloadableEmulators.js:459:13)
+    at async EmulatorRegistry.start (/usr/local/lib/node_modules/firebase-tools/lib/emulator/registry.js:19:9)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2024-10-25T04:07:26.992Z] ----------------------------------------------------------------------
+[debug] [2024-10-25T04:07:26.997Z] Command:       /usr/local/bin/node /usr/local/bin/firebase emulators:start
+[debug] [2024-10-25T04:07:26.998Z] CLI Version:   13.22.1
+[debug] [2024-10-25T04:07:26.998Z] Platform:      darwin
+[debug] [2024-10-25T04:07:26.999Z] Node Version:  v20.11.1
+[debug] [2024-10-25T04:07:26.999Z] Time:          Fri Oct 25 2024 09:07:26 GMT+0500 (Pakistan Standard Time)
+[debug] [2024-10-25T04:07:26.999Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-10-25T04:07:27.213Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-25T04:07:27.214Z] > authorizing via signed-in user (zainkhankhattak3@gmail.com)
+[debug] [2024-10-25T04:07:27.361Z] java version "21.0.2" 2024-01-16 LTS
+
+[debug] [2024-10-25T04:07:27.362Z] Java(TM) SE Runtime Environment (build 21.0.2+13-LTS-58)
+Java HotSpot(TM) 64-Bit Server VM (build 21.0.2+13-LTS-58, mixed mode, sharing)
+
+[debug] [2024-10-25T04:07:27.380Z] Parsed Java major version: 21
+[info] i  emulators: Starting emulators: firestore, hosting {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: firestore, hosting"}}
+[debug] [2024-10-25T04:07:30.536Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:07:30.537Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:07:30.537Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[warn] ⚠  hosting: Hosting Emulator unable to start on port 5000, starting on 5002 instead. {"metadata":{"emulator":{"name":"hosting"},"message":"Hosting Emulator unable to start on port 5000, starting on 5002 instead."}}
+[debug] [2024-10-25T04:07:30.538Z] [hosting] Hosting Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:07:30.538Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5002}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2024-10-25T04:07:30.549Z] [hub] writing locator at /var/folders/5n/6gy7qv3x4235255ly00xljp80000gn/T/hub-deepfake-437908.json
+[info] i  firestore: downloading cloud-firestore-emulator-v1.19.8.jar... {"metadata":{"emulator":{"name":"firestore"},"message":"downloading cloud-firestore-emulator-v1.19.8.jar..."}}
+[debug] [2024-10-25T04:07:30.583Z] >>> [apiv2][query] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar 
+[debug] [2024-10-25T04:07:31.227Z] <<< [apiv2][status] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar 200
+[debug] [2024-10-25T04:07:31.227Z] <<< [apiv2][body] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar [stream]
+[debug] [2024-10-25T04:07:55.585Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  firestore: Stopping Firestore Emulator {"metadata":{"emulator":{"name":"firestore"},"message":"Stopping Firestore Emulator"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2024-10-25T04:07:55.596Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[debug] [2024-10-25T04:07:56.028Z] Error: ENOSPC: no space left on device, copyfile '/var/folders/5n/6gy7qv3x4235255ly00xljp80000gn/T/tmp-58512-OaGZ9cLAibe2' -> '/Users/zainkhan/.cache/firebase/emulators/cloud-firestore-emulator-v1.19.8.jar'
+    at Object.copyFileSync (node:fs:3029:11)
+    at copyFile (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:73:6)
+    at onFile (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:59:25)
+    at getStats (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:51:44)
+    at handleFilterAndCopy (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:36:10)
+    at Object.copySync (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:29:10)
+    at downloadEmulator (/usr/local/lib/node_modules/firebase-tools/lib/emulator/download.js:30:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.start (/usr/local/lib/node_modules/firebase-tools/lib/emulator/downloadableEmulators.js:459:13)
+    at async EmulatorRegistry.start (/usr/local/lib/node_modules/firebase-tools/lib/emulator/registry.js:19:9)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2024-10-25T04:08:22.992Z] ----------------------------------------------------------------------
+[debug] [2024-10-25T04:08:22.998Z] Command:       /usr/local/bin/node /usr/local/bin/firebase emulators:start --debug
+[debug] [2024-10-25T04:08:22.998Z] CLI Version:   13.22.1
+[debug] [2024-10-25T04:08:22.998Z] Platform:      darwin
+[debug] [2024-10-25T04:08:22.999Z] Node Version:  v20.11.1
+[debug] [2024-10-25T04:08:22.999Z] Time:          Fri Oct 25 2024 09:08:22 GMT+0500 (Pakistan Standard Time)
+[debug] [2024-10-25T04:08:22.999Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-10-25T04:08:23.329Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-25T04:08:23.332Z] > authorizing via signed-in user (zainkhankhattak3@gmail.com)
+[debug] [2024-10-25T04:08:23.532Z] java version "21.0.2" 2024-01-16 LTS
+
+[debug] [2024-10-25T04:08:23.534Z] Java(TM) SE Runtime Environment (build 21.0.2+13-LTS-58)
+Java HotSpot(TM) 64-Bit Server VM (build 21.0.2+13-LTS-58, mixed mode, sharing)
+
+[debug] [2024-10-25T04:08:23.556Z] Parsed Java major version: 21
+[info] i  emulators: Starting emulators: firestore, hosting {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: firestore, hosting"}}
+[debug] [2024-10-25T04:08:28.174Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:08:28.175Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:08:28.176Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[warn] ⚠  hosting: Hosting Emulator unable to start on port 5000, starting on 5002 instead. {"metadata":{"emulator":{"name":"hosting"},"message":"Hosting Emulator unable to start on port 5000, starting on 5002 instead."}}
+[debug] [2024-10-25T04:08:28.178Z] [hosting] Hosting Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:08:28.179Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5002}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2024-10-25T04:08:28.210Z] [hub] writing locator at /var/folders/5n/6gy7qv3x4235255ly00xljp80000gn/T/hub-deepfake-437908.json
+[info] i  firestore: downloading cloud-firestore-emulator-v1.19.8.jar... {"metadata":{"emulator":{"name":"firestore"},"message":"downloading cloud-firestore-emulator-v1.19.8.jar..."}}
+[debug] [2024-10-25T04:08:28.280Z] >>> [apiv2][query] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar 
+[debug] [2024-10-25T04:08:28.946Z] <<< [apiv2][status] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar 200
+[debug] [2024-10-25T04:08:28.947Z] <<< [apiv2][body] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar [stream]
+[debug] [2024-10-25T04:09:04.642Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  firestore: Stopping Firestore Emulator {"metadata":{"emulator":{"name":"firestore"},"message":"Stopping Firestore Emulator"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2024-10-25T04:09:04.665Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[debug] [2024-10-25T04:09:06.533Z] Error: ENOSPC: no space left on device, copyfile '/var/folders/5n/6gy7qv3x4235255ly00xljp80000gn/T/tmp-58685-77gh4ihmBNAI' -> '/Users/zainkhan/.cache/firebase/emulators/cloud-firestore-emulator-v1.19.8.jar'
+    at Object.copyFileSync (node:fs:3029:11)
+    at copyFile (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:73:6)
+    at onFile (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:59:25)
+    at getStats (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:51:44)
+    at handleFilterAndCopy (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:36:10)
+    at Object.copySync (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:29:10)
+    at downloadEmulator (/usr/local/lib/node_modules/firebase-tools/lib/emulator/download.js:30:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.start (/usr/local/lib/node_modules/firebase-tools/lib/emulator/downloadableEmulators.js:459:13)
+    at async EmulatorRegistry.start (/usr/local/lib/node_modules/firebase-tools/lib/emulator/registry.js:19:9)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2024-10-25T04:09:21.259Z] ----------------------------------------------------------------------
+[debug] [2024-10-25T04:09:21.264Z] Command:       /usr/local/bin/node /usr/local/bin/firebase emulators:start --debug
+[debug] [2024-10-25T04:09:21.265Z] CLI Version:   13.22.1
+[debug] [2024-10-25T04:09:21.265Z] Platform:      darwin
+[debug] [2024-10-25T04:09:21.265Z] Node Version:  v20.11.1
+[debug] [2024-10-25T04:09:21.266Z] Time:          Fri Oct 25 2024 09:09:21 GMT+0500 (Pakistan Standard Time)
+[debug] [2024-10-25T04:09:21.266Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-10-25T04:09:21.470Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-25T04:09:21.472Z] > authorizing via signed-in user (zainkhankhattak3@gmail.com)
+[debug] [2024-10-25T04:09:21.607Z] java version "21.0.2" 2024-01-16 LTS
+
+[debug] [2024-10-25T04:09:21.609Z] Java(TM) SE Runtime Environment (build 21.0.2+13-LTS-58)
+Java HotSpot(TM) 64-Bit Server VM (build 21.0.2+13-LTS-58, mixed mode, sharing)
+
+[debug] [2024-10-25T04:09:21.617Z] Parsed Java major version: 21
+[info] i  emulators: Starting emulators: firestore, hosting {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: firestore, hosting"}}
+[debug] [2024-10-25T04:09:24.852Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:09:24.853Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:09:24.853Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[warn] ⚠  hosting: Hosting Emulator unable to start on port 5000, starting on 5002 instead. {"metadata":{"emulator":{"name":"hosting"},"message":"Hosting Emulator unable to start on port 5000, starting on 5002 instead."}}
+[debug] [2024-10-25T04:09:24.854Z] [hosting] Hosting Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2024-10-25T04:09:24.855Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5002}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2024-10-25T04:09:24.868Z] [hub] writing locator at /var/folders/5n/6gy7qv3x4235255ly00xljp80000gn/T/hub-deepfake-437908.json
+[info] i  firestore: downloading cloud-firestore-emulator-v1.19.8.jar... {"metadata":{"emulator":{"name":"firestore"},"message":"downloading cloud-firestore-emulator-v1.19.8.jar..."}}
+[debug] [2024-10-25T04:09:24.900Z] >>> [apiv2][query] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar 
+[debug] [2024-10-25T04:09:25.993Z] <<< [apiv2][status] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar 200
+[debug] [2024-10-25T04:09:25.994Z] <<< [apiv2][body] GET https://storage.googleapis.com/firebase-preview-drop/emulator/cloud-firestore-emulator-v1.19.8.jar [stream]
+[debug] [2024-10-25T04:09:47.229Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  firestore: Stopping Firestore Emulator {"metadata":{"emulator":{"name":"firestore"},"message":"Stopping Firestore Emulator"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2024-10-25T04:09:47.262Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[debug] [2024-10-25T04:09:47.823Z] Error: ENOSPC: no space left on device, copyfile '/var/folders/5n/6gy7qv3x4235255ly00xljp80000gn/T/tmp-58881-4v37XQj5NZL7' -> '/Users/zainkhan/.cache/firebase/emulators/cloud-firestore-emulator-v1.19.8.jar'
+    at Object.copyFileSync (node:fs:3029:11)
+    at copyFile (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:73:6)
+    at onFile (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:59:25)
+    at getStats (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:51:44)
+    at handleFilterAndCopy (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:36:10)
+    at Object.copySync (/usr/local/lib/node_modules/firebase-tools/node_modules/fs-extra/lib/copy/copy-sync.js:29:10)
+    at downloadEmulator (/usr/local/lib/node_modules/firebase-tools/lib/emulator/download.js:30:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.start (/usr/local/lib/node_modules/firebase-tools/lib/emulator/downloadableEmulators.js:459:13)
+    at async EmulatorRegistry.start (/usr/local/lib/node_modules/firebase-tools/lib/emulator/registry.js:19:9)
+[error] 
+[error] Error: An unexpected error has occurred.

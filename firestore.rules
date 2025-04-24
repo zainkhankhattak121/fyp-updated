@@ -1,0 +1,20 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default rule: Only authenticated users can read/write
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Users collection rules
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+
+    // Posts collection rules
+    match /posts/{postId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}
