@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "996257752349",
+    "project_id": "deepfakeaudio",
+    "storage_bucket": "deepfakeaudio.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996257752349:android:41c3c0dda62c933fef6df4",
+        "android_client_info": {
+          "package_name": "com.deepfakeapp.deepfake"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5zFuWZGZcsIbFTqSzyVgBVHjnUZmKdSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
