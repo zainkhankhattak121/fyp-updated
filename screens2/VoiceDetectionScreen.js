@@ -1,196 +1,598 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { 
+  View, 
+  Text, 
+  TouchableOpacity, 
+  StyleSheet, 
+  Alert, 
+  ActivityIndicator, 
+  Animated, 
+  Easing,
+  AppState,
+  Dimensions,
+  SafeAreaView
+} from "react-native";
 import axios from "axios";
-import Confetti from "react-confetti"; // For confetti animation
-import "animate.css"; // For simple animations
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
+import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+
+const { width } = Dimensions.get('window');
+
+const SUPPORTED_AUDIO_TYPES = [
+  "audio/wav", "audio/x-wav", "audio/mpeg", "audio/mp3",
+  "audio/aac", "audio/flac", "audio/ogg", "audio/x-flac",
+  "audio/mp4", "audio/x-m4a", "audio/webm", "audio/amr"
+];
+
+const SERVER_URL = "https://zainkhan121-fastapi-deepfake.hf.space";
+const MAX_FILE_SIZE_MB = 10;
+const SERVER_CHECK_INTERVAL = 5000;
+const CONNECTION_RETRY_DELAY = 2000;
+
+const createConnectionManager = () => {
+  let isConnected = false;
+  let connectionCheckInterval = null;
+  let isActive = false;
+  let retryTimeout = null;
+  
+  const manager = {
+    start: (onStatusChange) => {
+      if (connectionCheckInterval || !isActive) return;
+      
+      const checkConnection = async () => {
+        try {
+          const response = await axios.get(`${SERVER_URL}/health-check`, {
+            timeout: 5000
+          });
+          
+          const newStatus = response.status === 200;
+          if (newStatus !== isConnected) {
+            isConnected = newStatus;
+            onStatusChange(isConnected);
+          }
+          if (retryTimeout) {
+            clearTimeout(retryTimeout);
+            retryTimeout = null;
+          }
+        } catch (error) {
+          if (isConnected) {
+            isConnected = false;
+            onStatusChange(false);
+          }
+          if (!retryTimeout) {
+            retryTimeout = setTimeout(() => checkConnection(), CONNECTION_RETRY_DELAY);
+          }
+        }
+      };
+      
+      checkConnection();
+      connectionCheckInterval = setInterval(checkConnection, SERVER_CHECK_INTERVAL);
+    },
+    stop: () => {
+      if (connectionCheckInterval) {
+        clearInterval(connectionCheckInterval);
+        connectionCheckInterval = null;
+      }
+      if (retryTimeout) {
+        clearTimeout(retryTimeout);
+        retryTimeout = null;
+      }
+    },
+    activate: () => {
+      isActive = true;
+    },
+    deactivate: () => {
+      isActive = false;
+      manager.stop();
+    },
+    getStatus: () => isConnected
+  };
+  
+  return manager;
+};
+
+const showAlert = (title, message) => {
+  Alert.alert(
+    title,
+    message,
+    [{ text: 'OK' }],
+    { cancelable: false }
+  );
+};
 
 const VoiceDetectionScreen = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [result, setResult] = useState("");
-  const [serverRunning, setServerRunning] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
+  const [result, setResult] = useState(null);
+  const [serverConnected, setServerConnected] = useState(false);
+  const [uploadState, setUploadState] = useState({
+    loading: false,
+    error: null,
+    progress: 0
+  });
+  const [fileInfo, setFileInfo] = useState({
+    name: null,
+    size: null
+  });
+  
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const connectionManager = useRef(createConnectionManager()).current;
+  const appState = useRef(AppState.currentState);
+  const uploadController = useRef(null);
 
-  // Check if the server is running
+  const animateResult = () => {
+    Animated.sequence([
+      Animated.timing(scaleAnim, {
+        toValue: 1.1,
+        duration: 150,
+        easing: Easing.ease,
+        useNativeDriver: true
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 150,
+        easing: Easing.ease,
+        useNativeDriver: true
+      })
+    ]).start();
+  };
+
   useEffect(() => {
-    const checkServer = async () => {
-      try {
-        const response = await axios.get("http://127.0.0.1:8000/");
-        if (response.status === 200) setServerRunning(true);
-      } catch (error) {
-        console.error("Server connectivity issue:", error.message);
-        setServerRunning(false);
-        alert(
-          "Unable to connect to the backend server. Please ensure the server is running."
-        );
+    connectionManager.activate();
+    
+    const handleStatusChange = (connected) => {
+      setServerConnected(connected);
+      if (!connected && uploadState.loading) {
+        uploadController.current?.abort();
+        setUploadState(prev => ({
+          ...prev,
+          loading: false,
+          error: "Server connection lost during upload"
+        }));
+        showAlert("Connection Lost", "Server connection was lost during upload. Please try again.");
       }
     };
-
-    checkServer();
+    
+    const handleAppStateChange = (nextAppState) => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        connectionManager.start(handleStatusChange);
+      } else if (nextAppState.match(/inactive|background/)) {
+        connectionManager.stop();
+      }
+      appState.current = nextAppState;
+    };
+    
+    connectionManager.start(handleStatusChange);
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    
+    return () => {
+      connectionManager.deactivate();
+      subscription.remove();
+    };
   }, []);
 
-  // Handle file upload
-  const handleFileUpload = async (event) => {
+  const handleFileUpload = async () => {
+    if (!connectionManager.getStatus()) {
+      showAlert("Server Offline", "Please ensure the server is running and accessible.");
+      return;
+    }
+
+    setResult(null);
+    setUploadState({ loading: true, error: null, progress: 0 });
+
     try {
-      const file = event.target.files[0];
+      const pickerResult = await DocumentPicker.getDocumentAsync({
+        type: SUPPORTED_AUDIO_TYPES,
+        copyToCacheDirectory: true,
+        multiple: false
+      });
 
-      // Handle file selection cancellation
-      if (!file) return;
-
-      setSelectedFile(file.name);
-
-      // Validate file size (limit to 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        alert("Please select a file smaller than 10MB.");
+      if (pickerResult.canceled || !pickerResult.assets?.[0]) {
+        setUploadState(prev => ({ ...prev, loading: false }));
         return;
       }
 
-      // Create FormData
-      const formData = new FormData();
-      formData.append("file", file);
+      const file = pickerResult.assets[0];
+      const fileStats = await FileSystem.getInfoAsync(file.uri);
+      
+      if (!fileStats.exists) {
+        throw new Error("Selected file does not exist");
+      }
 
-      // Upload file to backend
-      const response = await axios.post("http://127.0.0.1:8000/upload/", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      try {
+        await FileSystem.readAsStringAsync(file.uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+      } catch (readError) {
+        throw new Error("Failed to read file contents");
+      }
+
+      const fileSizeMB = fileStats.size / (1024 * 1024);
+      if (fileSizeMB > MAX_FILE_SIZE_MB) {
+        throw new Error(`File size exceeds ${MAX_FILE_SIZE_MB}MB limit`);
+      }
+
+      if (!SUPPORTED_AUDIO_TYPES.includes(file.mimeType)) {
+        throw new Error("Unsupported file type");
+      }
+
+      setFileInfo({
+        name: file.name,
+        size: fileSizeMB.toFixed(2)
       });
 
-      // Display result
-      const simulatedResult = response.data.result;
-      setResult(simulatedResult);
+      const fileUri = file.uri.startsWith('file://') ? file.uri : `file://${file.uri}`;
+      const formData = new FormData();
+      formData.append('file', {
+        uri: fileUri,
+        name: file.name,
+        type: file.mimeType || "audio/*"
+      });
 
-      // Trigger confetti for "real" result
-      if (simulatedResult === "real") {
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 3000);
+      uploadController.current = new AbortController();
+      const timeout = setTimeout(() => {
+        uploadController.current.abort();
+      }, 30000);
+
+      if (!connectionManager.getStatus()) {
+        throw new Error("Server connection lost during upload preparation");
       }
-    } catch (err) {
-      console.error("File upload error:", err.response?.data || err.message);
-      alert(
-        err.response?.data?.message || "Failed to upload the file. Please try again."
+
+      const response = await axios.post(`${SERVER_URL}/upload/`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        signal: uploadController.current.signal,
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadState(prev => ({ ...prev, progress: percentCompleted }));
+          
+          if (!connectionManager.getStatus()) {
+            uploadController.current.abort();
+            throw new Error("Server connection lost during upload");
+          }
+        }
+      });
+
+      clearTimeout(timeout);
+
+      if (!response.data?.result) {
+        throw new Error("Invalid response from server");
+      }
+
+      if (!connectionManager.getStatus()) {
+        throw new Error("Server connection lost during result processing");
+      }
+
+      setResult(response.data.result);
+      animateResult();
+      
+      showAlert(
+        "Analysis Complete", 
+        `The voice analysis result is: ${response.data.result === "real" ? "Genuine Voice" : "Potential Deepfake"}`
       );
+
+    } catch (error) {
+      console.error("Upload error:", error);
+      let errorMessage = "Upload failed: ";
+      
+      if (error.name === 'AbortError' || error.code === "ECONNABORTED") {
+        errorMessage += "Request timed out or was aborted";
+      } else if (error.message === "Network Error") {
+        errorMessage += "Network error - please check your connection";
+      } else if (error.response) {
+        errorMessage += `Server error (${error.response.status})`;
+      } else {
+        errorMessage += error.message || "Unknown error";
+      }
+      
+      setUploadState(prev => ({ ...prev, error: errorMessage }));
+      showAlert("Upload Failed", errorMessage);
+    } finally {
+      setUploadState(prev => ({ ...prev, loading: false, progress: 0 }));
+      uploadController.current = null;
     }
   };
 
   return (
-    <view style={styles.container}>
-      {showConfetti && <Confetti recycle={false} numberOfPieces={200} />}
-      <h1 style={styles.title}>Voice Detection</h1>
-      <div style={styles.uploadSection}>
-        <button
-          style={{
-            ...styles.button,
-            backgroundColor: !serverRunning ? "#ccc" : "#606c38",
-            cursor: !serverRunning ? "not-allowed" : "pointer",
-          }}
-          onClick={() => document.getElementById("file-input").click()}
-          disabled={!serverRunning}
-        >
-          <i className="material-icons" style={styles.icon}>Upload Voice File</i>
-        </button>
-        <input
-          id="file-input"
-          type="file"
-          accept="audio/*"
-          style={{ display: "none" }}
-          onChange={handleFileUpload}
-        />
-        {!serverRunning && (
-          <p style={styles.errorText}>Backend is not running</p>
-        )}
-      </div>
+    <SafeAreaView style={styles.safeArea}>
+      <LinearGradient
+        colors={['#fefae0', '#f8f4d9']}
+        style={styles.container}
+      >
+        <View style={styles.header}>
+          <Text style={styles.title}>Voice Authenticator</Text>
+          <Text style={styles.subtitle}>Detect deepfake audio with AI analysis</Text>
+        </View>
+        
+        <View style={styles.statusCard}>
+          <View style={[
+            styles.statusBadge,
+            { backgroundColor: serverConnected ? "#4CAF50" : "#F44336" }
+          ]}>
+            <MaterialIcons 
+              name={serverConnected ? "wifi" : "wifi-off"} 
+              size={20} 
+              color="white"
+            />
+            <Text style={styles.statusText}>
+              {serverConnected ? "Server Connected" : "Server Disconnected"}
+            </Text>
+          </View>
+          <Text style={styles.serverUrl}>{SERVER_URL}</Text>
+        </View>
 
-      {selectedFile && (
-        <div style={styles.fileInfo}>
-          <p><strong>Selected File:</strong> {selectedFile}</p>
-        </div>
-      )}
-
-      {result && (
-        <div
-          style={
-            result === "real" ? styles.realResultSection : styles.fakeResultSection
-          }
-        >
-          <p
-            className={`animate__animated ${
-              result === "real" ? "animate__bounce" : "animate__flash"
-            }`}
-            style={styles.resultText}
+        <View style={styles.uploadCard}>
+          <TouchableOpacity
+            style={[
+              styles.uploadButton,
+              { 
+                opacity: (!serverConnected || uploadState.loading) ? 0.6 : 1,
+              }
+            ]}
+            onPress={handleFileUpload}
+            disabled={!serverConnected || uploadState.loading}
+            activeOpacity={0.8}
           >
-            {result === "real" ? "😊 The result is Real!" : "🤔 The result is Fake!"}
-          </p>
-        </div>
-      )}
-    </view>
+            <LinearGradient
+              colors={serverConnected ? ['#606c38', '#4a5a2a'] : ['#CCCCCC', '#AAAAAA']}
+              style={styles.buttonGradient}
+            >
+              {uploadState.loading ? (
+                <View style={styles.uploadProgressContainer}>
+                  <ActivityIndicator color="#fff" size="small" />
+                  {uploadState.progress > 0 && (
+                    <Text style={styles.progressText}>
+                      {uploadState.progress}%
+                    </Text>
+                  )}
+                </View>
+              ) : (
+                <Text style={styles.buttonText}>
+                  {serverConnected ? "Upload Voice File" : "Server Offline"}
+                </Text>
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {fileInfo.name && (
+            <View style={styles.fileInfoCard}>
+              <MaterialIcons name="insert-drive-file" size={24} color="#606c38" />
+              <View style={styles.fileInfoTextContainer}>
+                <Text style={styles.fileText} numberOfLines={1} ellipsizeMode="middle">
+                  {fileInfo.name}
+                </Text>
+                <Text style={styles.fileSize}>{fileInfo.size} MB</Text>
+              </View>
+            </View>
+          )}
+        </View>
+
+        {result && (
+          <Animated.View 
+            style={[
+              styles.resultCard,
+              result === "real" ? styles.realResult : styles.fakeResult,
+              { transform: [{ scale: scaleAnim }] }
+            ]}
+          >
+            <MaterialIcons 
+              name={result === "real" ? "check-circle" : "warning"} 
+              size={32} 
+              color="white"
+            />
+            <Text style={styles.resultText}>
+              {result === "real" ? "Genuine Voice" : "Potential Deepfake"}
+            </Text>
+          </Animated.View>
+        )}
+
+        {uploadState.error && (
+          <View style={styles.errorCard}>
+            <MaterialIcons name="error-outline" size={24} color="#fefae0" />
+            <Text style={styles.errorText}>
+              {uploadState.error}
+            </Text>
+          </View>
+        )}
+
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Select an audio file to analyze</Text>
+          <Text style={styles.supportedFormats}>
+            Supported formats: WAV, MP3, AAC, FLAC, OGG, M4A, WEBM, AMR
+          </Text>
+        </View>
+      </LinearGradient>
+    </SafeAreaView>
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#283618',
+  },
   container: {
-    padding: "20px",
-    backgroundColor: "#fefae0",
-    borderRadius: "8px",
-    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-    maxWidth: "600px",
-    margin: "auto",
-    textAlign: "center",
+    flex: 1,
+    padding: 24,
+    paddingTop: 16,
+  },
+  header: {
+    marginBottom: 24,
+    alignItems: 'center',
   },
   title: {
-    fontSize: "28px",
-    color: "#333",
-    marginBottom: "20px",
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#283618",
+    fontFamily: 'Roboto',
+    marginBottom: 8,
   },
-  uploadSection: {
-    marginBottom: "20px",
+  subtitle: {
+    fontSize: 16,
+    color: "#606c38",
+    fontFamily: 'Roboto',
+    textAlign: 'center',
   },
-  button: {
-    padding: "15px 30px",
-    borderRadius: "10px",
-    color: "#fefae0",
-    fontSize: "16px",
-    fontWeight: "bold",
-    border: "none",
-    display: "flex",
+  statusCard: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  statusBadge: {
+    flexDirection: "row",
     alignItems: "center",
-    gap: "10px",
     justifyContent: "center",
-    transition: "background-color 0.3s ease",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    alignSelf: 'center',
+    marginBottom: 12,
   },
-  icon: {
-    fontSize: "20px",
+  statusText: {
+    fontSize: 14,
+    fontWeight: "500",
+    marginLeft: 8,
+    color: "white",
+    fontFamily: 'Roboto'
   },
-  fileInfo: {
-    backgroundColor: "#fff",
-    padding: "10px",
-    marginTop: "10px",
-    borderRadius: "5px",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+  serverUrl: {
+    textAlign: "center",
+    color: "#606c38",
+    fontSize: 12,
+    fontFamily: 'Roboto',
+    opacity: 0.8,
   },
-  realResultSection: {
-    marginTop: "20px",
-    padding: "10px",
-    backgroundColor: "#eaf7e0",
-    borderRadius: "5px",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+  uploadCard: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
   },
-  fakeResultSection: {
-    marginTop: "20px",
-    padding: "10px",
-    backgroundColor: "#fdecea",
-    borderRadius: "5px",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+  uploadButton: {
+    borderRadius: 50,
+    overflow: 'hidden',
+    marginBottom: 16,
+  },
+  buttonGradient: {
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: "#fefae0",
+    fontWeight: "600",
+    fontSize: 16,
+    fontFamily: 'Roboto'
+  },
+  uploadProgressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  progressText: {
+    color: "#fefae0",
+    marginLeft: 8,
+    fontSize: 16,
+    fontFamily: 'Roboto'
+  },
+  fileInfoCard: {
+    backgroundColor: "#f8f4d9",
+    padding: 12,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e9e5d1',
+  },
+  fileInfoTextContainer: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  fileText: {
+    fontSize: 14,
+    color: "#283618",
+    fontFamily: 'Roboto',
+    marginBottom: 4,
+  },
+  fileSize: {
+    fontSize: 12,
+    color: "#606c38",
+    fontFamily: 'Roboto',
+    opacity: 0.8,
+  },
+  resultCard: {
+    padding: 16,
+    borderRadius: 12,
+    alignItems: "center",
+    marginBottom: 24,
+    flexDirection: "row",
+    justifyContent: "center",
+    width: width - 48,
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5
+  },
+  realResult: {
+    backgroundColor: "#606c38",
+  },
+  fakeResult: {
+    backgroundColor: "#bc6c25",
   },
   resultText: {
-    fontSize: "20px",
-    fontWeight: "bold",
-    color: "#283618",
+    fontWeight: "600",
+    fontSize: 18,
+    marginLeft: 12,
+    color: "#fefae0",
+    fontFamily: 'Roboto'
+  },
+  errorCard: {
+    backgroundColor: "#bc6c25",
+    padding: 16,
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
   },
   errorText: {
-    color: "red",
-    marginTop: "10px",
-    fontSize: "14px",
-    fontWeight: "bold",
+    color: "#fefae0",
+    marginLeft: 12,
+    fontSize: 14,
+    fontFamily: 'Roboto',
+    flex: 1,
   },
-};
+  footer: {
+    marginTop: 'auto',
+    alignItems: 'center',
+  },
+  footerText: {
+    color: "#606c38",
+    fontSize: 14,
+    fontFamily: 'Roboto',
+    marginBottom: 8,
+  },
+  supportedFormats: {
+    color: "#606c38",
+    fontSize: 12,
+    fontFamily: 'Roboto',
+    opacity: 0.7,
+    textAlign: 'center',
+  }
+});
 
 export default VoiceDetectionScreen;

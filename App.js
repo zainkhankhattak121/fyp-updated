@@ -12,78 +12,62 @@ import SplashScreen from './screens2/SplashScreen';
 import HomeScreen from './screens2/HomeScreen';
 import VoiceGenerationScreen from './screens2/VoiceGenerationScreen';
 import VoiceDetectionScreen from './screens2/VoiceDetectionScreen';
-import SavedVoicesScreen from './screens2/SavedVoicesScreen'; // Ensure this file exists
-import PoliciesScreen from './screens2/Policiess'; // Ensure this file exists
-import AboutScreen from './screens2/AboutScreen'; // Ensure this file exists
-import FeedbackScreen from './screens2/FeedbackScreen'; // Ensure this file exists
+import LogoutScreen from './screens2/LogoutScreen'; // Renamed from SavedVoicesScreen
+import PoliciesScreen from './screens2/Policiess';
+import AboutScreen from './screens2/AboutScreen';
+import FeedbackScreen from './screens2/FeedbackScreen';
 import googlesignin from './GoogleSignInScreen';
 import ForgetPasswordScreen from './ForgetPasswordScreen';
-
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-// Custom Back Button Component
 const CustomBackButton = ({ navigation }) => (
   <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
     <Text style={styles.backButtonText}>← Back</Text>
   </TouchableOpacity>
 );
 
-// Authentication Stack (for login, signup, and other auth-related screens)
 function AuthStack() {
   return (
     <Stack.Navigator initialRouteName="SplashScreen">
-      <Stack.Screen 
-        name="Splash" 
-        component={SplashScreen} 
-        options={{ headerShown: false }} 
-      />
-      <Stack.Screen 
-        name="AuthDashboard" 
-        component={AuthDashboard} 
-        options={{ headerShown: false }} 
-      />
-      <Stack.Screen 
-        name="googlesignin" 
-        component={googlesignin} 
-        options={{ headerShown: false }} 
-      />
-      <Stack.Screen 
-        name="ForgetPassword" 
-        component={ForgetPasswordScreen} 
-        options={{ headerShown: false }} 
-      />
-      <Stack.Screen 
-        name="SignUp" 
-        component={ScreenSignUp2} 
-        options={{ headerShown: false }} 
-      />
-      <Stack.Screen 
-        name="EmailLogin" 
-        component={ScreenEmailLogin2} 
-        options={{ headerShown: false }} 
-      />
+      <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="AuthDashboard" component={AuthDashboard} options={{ headerShown: false }} />
+      <Stack.Screen name="googlesignin" component={googlesignin} options={{ headerShown: false }} />
+      <Stack.Screen name="ForgetPasswordScreen" component={ForgetPasswordScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="SignUp" component={ScreenSignUp2} options={{ headerShown: false }} />
+      <Stack.Screen name="EmailLogin" component={ScreenEmailLogin2} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
 
-// Main App with Drawer
 function AppDrawer() {
   return (
-    <Drawer.Navigator initialRouteName="HomeScreen">
-      <Drawer.Screen name="Home" component={HomeScreen} />
-      <Drawer.Screen name="SavedVoices" component={SavedVoicesScreen} />
-      <Drawer.Screen name="Policies" component={PoliciesScreen} />
-      <Drawer.Screen name="About" component={AboutScreen} />
-      <Drawer.Screen name="Feedback" component={FeedbackScreen} />
+    <Drawer.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        drawerActiveTintColor: '#606c38',
+        drawerInactiveTintColor: '#333',
+        drawerLabelStyle: {
+          fontSize: 16,
+        },
+      }}
+    >
+      <Drawer.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
+      <Drawer.Screen name="VoiceGeneration" component={VoiceGenerationScreen} options={{ title: 'Voice Generation' }} />
+      <Drawer.Screen name="VoiceDetection" component={VoiceDetectionScreen} options={{ title: 'Voice Detection' }} />
+      <Drawer.Screen name="Policies" component={PoliciesScreen} options={{ title: 'Policies' }} />
+      <Drawer.Screen name="About" component={AboutScreen} options={{ title: 'About Us' }} />
+      <Drawer.Screen name="Feedback" component={FeedbackScreen} options={{ title: 'Feedback' }} />
       <Drawer.Screen 
-        name="VoiceGeneration" 
-        component={VoiceGenerationScreen} 
-      />
-      <Drawer.Screen 
-        name="VoiceDetection" 
-        component={VoiceDetectionScreen} 
+        name="Logout" 
+        component={LogoutScreen} 
+        options={{ 
+          title: 'Logout',
+          drawerLabel: ({ focused, color }) => (
+            <Text style={{ color: '#d62828', fontWeight: 'bold' }}>Logout</Text>
+          )
+        }} 
       />
     </Drawer.Navigator>
   );
@@ -93,16 +77,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen 
-          name="AuthStack" 
-          component={AuthStack} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen 
-          name="MainApp" 
-          component={AppDrawer} 
-          options={{ headerShown: false }} 
-        />
+        <Stack.Screen name="AuthStack" component={AuthStack} options={{ headerShown: false }} />
+        <Stack.Screen name="MainApp" component={AppDrawer} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

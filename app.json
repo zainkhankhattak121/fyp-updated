@@ -13,85 +13,35 @@
       "backgroundColor": "#ffffff"
     },
     "android": {
-      "googleServicesFile": "./android/app/google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.deepfakeapp.deepfake",
-      "newArchEnabled": true,
-      "jsEngine": "hermes",
       "permissions": [
-        "android.permission.RECORD_AUDIO",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
-      ],
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "data": [
-            {
-              "scheme": "https",
-              "host": "deepfakeapp.com",
-              "pathPrefix": "/"
-            },
-            {
-              "scheme": "deepfakeapp"
-            }
-          ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
-        }
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ]
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "firebase": {
-        "apiKey": "AIzaSyC5zFuWZGZcsIbFTqSzyVgBVHjnUZmKdSE",
-        "authDomain": "deepfakeaudio.firebaseapp.com",
-        "projectId": "deepfakeaudio",
-        "storageBucket": "deepfakeaudio.appspot.com",
-        "messagingSenderId": "996257752349",
-        "appId": "1:996257752349:android:41c3c0dda62c933fef6df4"
-      },
-      "eas": {
-        "projectId": "7b4fe032-8710-471b-8e0d-c9ad96c85ca3"
+    "ios": {
+      "bundleIdentifier": "com.deepfakeapp.deepfake",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow access to audio files"
       }
     },
     "plugins": [
       [
-        "expo-build-properties",
-        {
-          "android": {
-            "enableProguardInReleaseBuilds": true,
-            "extraMavenRepos": [
-              "https://maven.google.com"
-            ]
-          }
-        }
-      ],
-      [
         "expo-image-picker",
         {
-          "photosPermission": "Allow access to your audio files to upload voice samples.",
-          "cameraPermission": "Allow access to your camera.",
-          "microphonePermission": "Allow access to your microphone."
+          "photosPermission": "Allow access to your audio files"
         }
       ]
     ],
-    "updates": {
-      "url": "https://u.expo.dev/7b4fe032-8710-471b-8e0d-c9ad96c85ca3",
-      "fallbackToCacheTimeout": 0
-    },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    },
-    "ios": {
-      "bundleIdentifier": "com.deepfakeapp.deepfake"
+    "extra": {
+      "eas": {
+        "projectId": "7b4fe032-8710-471b-8e0d-c9ad96c85ca3"
+      }
     }
   }
 }

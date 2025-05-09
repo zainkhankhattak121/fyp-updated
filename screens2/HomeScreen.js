@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, Button, Dimensions, Image, ScrollView } from 'react-native';
-
 const { width, height } = Dimensions.get('window'); // Get device dimensions for responsiveness
 
 const HomeScreen = ({ navigation }) => {
