@@ -1,0 +1,70 @@
+TTS
+
+# Core framework and async utils
+fastapi
+uvicorn
+anyio
+sniffio
+starlette
+
+# Audio processing
+audioread
+soundfile
+librosa
+soxr
+pydub
+noisereduce
+
+# ML & DL
+torch
+torchaudio
+transformers
+scikit-learn
+scipy
+numpy
+joblib
+threadpoolctl
+
+# TTS utilities
+gTTS
+regex
+safetensors
+huggingface-hub
+
+# Visualization and math
+matplotlib
+sympy
+
+# Packaging & misc
+packaging
+requests
+python-dateutil
+PyYAML
+filelock
+platformdirs
+pooch
+fsspec
+
+# Other utilities
+click
+decorator
+Jinja2
+pydantic
+typing_extensions
+typing-inspection
+charset-normalizer
+urllib3
+idna
+certifi
+cycler
+kiwisolver
+fonttools
+lazy_loader
+pyparsing
+MarkupSafe
+
+# Compiler tools (used by some packages like librosa)
+llvmlite
+numba
+cffi
+pycparser
